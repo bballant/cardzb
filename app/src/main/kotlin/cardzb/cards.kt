@@ -1,4 +1,4 @@
-package cardzb.playingcards
+package cardzb.cards
 
 object Deck {
     val ranks: List<Rank> =
@@ -24,20 +24,20 @@ object Deck {
                     Suit.Hearts,
                     Suit.Spades,
             )
-    val fiftyTwoCards: List<Card<Rank, Suit>> =
+    val fiftyTwoCards: List<Card> =
         suits.flatMap { suit -> ranks.map { rank -> Card(rank, suit) } }
 }
 
-val aceOfSpades: Card<Rank.Ace, Suit.Spades> = Card(Rank.Ace, Suit.Spades)
+val aceOfSpades: Card = Card(Rank.Ace, Suit.Spades)
 
-data class Card<R: Rank, S: Suit>(
-    val rank: R,
-    val suit: S
+data class Card(
+    val rank: Rank,
+    val suit: Suit
 ) {
     override fun toString() = brief
     val brief = rank.toString() + suit
     companion object {
-        fun unicodeCard(card: Card<Rank, Suit>): String {
+        fun unicodeCard(card: Card): String {
             val cardNum = card.suit.idx * 16 + card.rank.idx
             val cardUnicode = 0x1F090 + cardNum
             return Character.toString(cardUnicode)
