@@ -27,4 +27,14 @@ fun main() {
   println(combinationsItr(someCards, listOf<List<Card>>(), 2, 0, listOf<Card>()))
   println(combinations(someCards, 2))
 
+
+  println(someCards)
+  println(ofAKind(someCards))
+  println(listOf(false, false).any{it})
+
+  val twoThreeFour =
+    (2..4).map{combinations(someCards, it)}
+        .map{combs -> combs.map{ofAKind(it)}.any{it}}
+
+  println(twoThreeFour)
 }

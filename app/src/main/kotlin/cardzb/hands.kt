@@ -2,13 +2,34 @@ package cardzb.hands
 
 import cardzb.cards.*
 
-sealed class Hand(val cards: List<Card>)
+sealed class PokerHand(
+    override val idx: Int
+): Indexed() {
 
-data class APair(
-    val a: Card,
-    val b: Card
-): Hand(listOf(a,b))
+    data class APair(
+        val s: Suit,
+        val p: Pair<Card, Card>,
+    ): PokerHand(1)
 
+    data class TwoPair(
+        val s: Suit,
+        val p1: Pair<Card, Card>,
+        val p2: Pair<Card, Card>
+    ): PokerHand(1)
+
+    data class ThreeOfAKind(
+        val s: Suit,
+        val t: Triple<Card, Card, Card>,
+    ): PokerHand(2)
+
+    data class FullHouse(
+        val a: APair,
+        val b: ThreeOfAKind
+    ): PokerHand(3)
+
+}
+
+/*
 object SoCool: Hand(someCards)
 
 data class TwoPair(
@@ -26,6 +47,7 @@ data class FullHouse(
     val a: APair,
     val b: ThreeOfAKind
 ): Hand(a.cards + b.cards)
+*/
 
 fun combinations(
     nCards: List<Card>,
@@ -87,6 +109,8 @@ fun threeOfAKind(a: Card, b: Card, c: Card): Boolean =
 fun fourOfAKind(a: Card, b: Card,
                 c: Card, d: Card): Boolean =
     listOf(a, b, c, d).map {it.rank}.toSet().size == 1
+
+fun ofAKind(cards: List<Card>): Boolean = cards.map{it.rank}.toSet().size == 1
 
 val someCards: List<Card> =
     listOf(Card(Rank.Ace, Suit.Spades), Card(Rank.King, Suit.Spades))
