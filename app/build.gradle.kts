@@ -1,13 +1,13 @@
-
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.5.31"
+    //id("com.apollographql.apollo3").version("3.3.2")
 
     // Apply the application plugin to add support for building a CLI application in Java.
     application
@@ -19,10 +19,10 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3")
     implementation("com.github.kittinunf.fuel:fuel-gson:2.3.1")
     implementation("com.github.kittinunf.fuel:fuel:2.3.1")
     implementation("com.google.code.gson:gson:2.9.0")
+    //implementation("com.apollographql.apollo3:apollo-runtime:3.3.2")
 
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -39,6 +39,11 @@ dependencies {
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
+
+// apollo {
+//   srcDir("app/src/main/graphql")
+//   packageName.set("cardzb.gen")
+// }
 
 application {
     // Define the main class for the application.
