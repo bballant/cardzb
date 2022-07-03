@@ -11,6 +11,7 @@ class App {
 }
 
 fun main() {
+    cardzb.jsoncards.foo()
 
 //  val res =
 //    SoCool.cards.map{
@@ -29,12 +30,12 @@ fun main() {
 
 
   println(someCards)
-  println(ofAKind(someCards))
+//  println(ofAKind(someCards))
   println(listOf(false, false).any{it})
 
-  val twoThreeFour =
-    (2..4).map{combinations(someCards, it)}
-        .map{combs -> combs.map{ofAKind(it)}.any{it}}
-
-  println(twoThreeFour)
+//  val twoThreeFour =
+//    (2..4).map{combinations(someCards, it)}
+//        .map{combs -> combs.map{ofAKind(it)}.any{it}}
+//
+//  println(twoThreeFour)
 }

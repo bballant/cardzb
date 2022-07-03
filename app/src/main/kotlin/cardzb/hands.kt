@@ -1,53 +1,24 @@
 package cardzb.hands
 
 import cardzb.cards.*
+import java.util.Optional
 
 sealed class PokerHand(
     override val idx: Int
 ): Indexed() {
-
-    data class APair(
-        val s: Suit,
-        val p: Pair<Card, Card>,
-    ): PokerHand(1)
-
-    data class TwoPair(
-        val s: Suit,
-        val p1: Pair<Card, Card>,
-        val p2: Pair<Card, Card>
-    ): PokerHand(1)
-
-    data class ThreeOfAKind(
-        val s: Suit,
-        val t: Triple<Card, Card, Card>,
-    ): PokerHand(2)
-
-    data class FullHouse(
-        val a: APair,
-        val b: ThreeOfAKind
-    ): PokerHand(3)
-
+    object AHighCard : PokerHand(1)
+    object APair : PokerHand(2)
+    object TwoPair : PokerHand(3)
+    object ThreeOfAKind : PokerHand(4)
+    object Straight : PokerHand(5)
+    object Flush : PokerHand(6)
+    object FullHouse : PokerHand(7)
+    object FourOfAKind : PokerHand(8)
+    object StraightFlush : PokerHand(9)
+    object RoyalFlush : PokerHand(10)
 }
 
-/*
-object SoCool: Hand(someCards)
-
-data class TwoPair(
-    val a: APair,
-    val b: APair
-): Hand(a.cards + b.cards)
-
-data class ThreeOfAKind(
-    val a: Card,
-    val b: Card,
-    val c: Card
-): Hand(listOf(a, b, c))
-
-data class FullHouse(
-    val a: APair,
-    val b: ThreeOfAKind
-): Hand(a.cards + b.cards)
-*/
+data class Scored(val cards: List<Card>, val pokerHand: PokerHand)
 
 fun combinations(
     nCards: List<Card>,
@@ -66,7 +37,11 @@ fun combinations(
                 return acc
             } else {
                 return loop(
-                    acc + combinations_(len-1, remInner.drop(1), currRes + remInner.first()),
+                    acc + combinations_(
+                        len-1,
+                        remInner.drop(1),
+                        currRes + remInner.first()
+                    ),
                     remInner.drop(1)
                 )
             }
@@ -98,20 +73,43 @@ fun combinationsItr(
     }
 }
 
+fun sameRank(cards: List<Card>): Boolean = cards.map{it.rank}.toSet().size == 1
+
 fun isNOfAKind(n: Int, cards: List<Card>): Boolean =
-    cards.size == n && cards.map{it.rank}.toSet().size == 1
-
-fun twoOfAKind(a: Card, b: Card): Boolean = a.rank == b.rank
-
-fun threeOfAKind(a: Card, b: Card, c: Card): Boolean =
-    listOf(a, b, c).map {it.rank}.toSet().size == 1
-
-fun fourOfAKind(a: Card, b: Card,
-                c: Card, d: Card): Boolean =
-    listOf(a, b, c, d).map {it.rank}.toSet().size == 1
-
-fun ofAKind(cards: List<Card>): Boolean = cards.map{it.rank}.toSet().size == 1
+    cards.size == n && sameRank(cards)
 
 val someCards: List<Card> =
     listOf(Card(Rank.Ace, Suit.Spades), Card(Rank.King, Suit.Spades))
 
+fun flushSuit(cards: List<Card>): Optional<Suit> {
+    if (cards.size != 5) return Optional.empty()
+
+    val suitSet = cards.map{it.suit}.toSet()
+    if (suitSet.size == 1) {
+        return Optional.of(suitSet.first())
+    } else {
+        return Optional.empty()
+    }
+}
+
+fun straightHighRank(cards: List<Card>): Optional<Rank> {
+    if (cards.size != 5) return Optional.empty()
+
+    val cardsSorted = cards.sortedByDescending { it.rank }
+    val pairs = cardsSorted
+        .map{it.rank.idx}
+        .zip(cardsSorted.first().rank.idx..cardsSorted.last().rank.idx)
+    val isStraight = pairs.all{it.first == it.second}
+    if (isStraight) {
+        return Optional.of(cardsSorted.first().rank)
+    } else {
+        return Optional.empty()
+    }
+}
+
+//fun highestPokerHand(cards: List<Card>): Scored {
+//    val combs = combinations(cards, 5)
+//    val flushes = combs.map{flushSuit(it)}.filter{isPresent}
+//
+//    return TODO()
+//}
